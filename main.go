@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	host := os.Getenv("CLEARDB_DATABASE_DB")
+	host := os.Getenv("CLEARDB_DATABASE_HOST")
 	user := os.Getenv("CLEARDB_DATABASE_USER")
 	password := os.Getenv("CLEARDB_DATABASE_PASSWORD")
 	dbName := os.Getenv("CLEARDB_DATABASE_DB")
