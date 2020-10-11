@@ -16,7 +16,7 @@ func (s *Server) postRecipeHandler(c *gin.Context) {
 
 	lastRecipe, err := recipeService.InsertRecipe(r)
 	if err == recipe.ErrCreateRecipe {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"message":  err.Error(),
 			"required": "title, preparation_time, serves, ingredients, cost",
 		})
@@ -26,7 +26,7 @@ func (s *Server) postRecipeHandler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusAccepted, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"message": "Recipe successfully created!",
 		"recipes": []*recipe.Recipe{lastRecipe},
 	})
@@ -58,7 +58,7 @@ func (s *Server) getRecipeHandler(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Recipe details by id",
-		"recipes": []*recipe.Recipe{r},
+		"recipe":  []*recipe.Recipe{r},
 	})
 }
 
@@ -78,14 +78,14 @@ func (s *Server) updateRecipeHandler(c *gin.Context) {
 		})
 		return
 	} else if err == recipe.ErrNotFound {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		c.JSON(http.StatusOK, gin.H{"message": err.Error()})
 		return
 	} else if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusAccepted, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"message": "Recipe successfully updated!",
 		"recipes": []recipe.Recipe{r},
 	})
@@ -99,14 +99,14 @@ func (s *Server) deleteRecipeHandler(c *gin.Context) {
 
 	_, err := recipeService.DeleteRecipe(id)
 	if err == recipe.ErrNotFound {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		c.JSON(http.StatusOK, gin.H{"message": err.Error()})
 		return
 	} else if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusAccepted, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"message": "Recipe successfully removed!",
 	})
 }
