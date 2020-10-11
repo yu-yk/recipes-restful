@@ -22,7 +22,7 @@ func main() {
 	defer db.Close()
 
 	s := api.NewServer(db)
-	s.Serve("localhost:8080")
+	s.Serve(":" + os.Getenv("PORT"))
 }
 
 func newSQLConn(driverName, url string) (*sql.DB, error) {
