@@ -6,7 +6,7 @@ import "time"
 type Recipe struct {
 	ID                 int       `json:"id,omitempty"`
 	Title              string    `json:"title,omitempty"`
-	MakingTime         string    `json:"preparation_time,omitempty"`
+	MakingTime         string    `json:"making_time,omitempty"`
 	Serves             string    `json:"serves,omitempty"`
 	Ingredients        string    `json:"ingredients,omitempty"`
 	Cost               int       `json:"cost,omitempty"`
