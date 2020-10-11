@@ -46,7 +46,7 @@ func (s *Server) postRecipeHandler(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Recipe successfully created!",
-		"recipes": []*recipe.Recipe{lastRecipe},
+		"recipe":  []*recipe.Recipe{lastRecipe},
 	})
 }
 
