@@ -13,6 +13,7 @@ type MySQLRepository struct {
 	*sql.DB
 }
 
+// NewMySQLRepository return the mysql repository
 func NewMySQLRepository(db *sql.DB) *MySQLRepository {
 	if mySQLRepository != nil {
 		return mySQLRepository
@@ -21,6 +22,7 @@ func NewMySQLRepository(db *sql.DB) *MySQLRepository {
 	return mySQLRepository
 }
 
+// InsertRecipe is the mysql implementation of insert recipe
 func (db *MySQLRepository) InsertRecipe(r *Recipe) (int64, error) {
 	stmt, err := db.Prepare("INSERT INTO recipes(title, making_time, serves, ingredients, cost, created_at, updated_at) VALUES(?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
@@ -38,6 +40,7 @@ func (db *MySQLRepository) InsertRecipe(r *Recipe) (int64, error) {
 	return lastID, nil
 }
 
+// GetRecipies is the mysql implementation of get all recipes
 func (db *MySQLRepository) GetRecipies() ([]Recipe, error) {
 	rows, err := db.Query("SELECT * FROM recipes")
 	if err != nil {
@@ -63,6 +66,7 @@ func (db *MySQLRepository) GetRecipies() ([]Recipe, error) {
 	return recipes, nil
 }
 
+// GetRecipieByID is the mysql implementation of get recipe by id
 func (db *MySQLRepository) GetRecipieByID(id string) (*Recipe, error) {
 	stmt, err := db.Prepare("SELECT * FROM recipes WHERE id = ?")
 	if err != nil {
@@ -78,6 +82,7 @@ func (db *MySQLRepository) GetRecipieByID(id string) (*Recipe, error) {
 	return &r, nil
 }
 
+// UpdateRecipe is the mysql implementation of update recipe by id
 func (db *MySQLRepository) UpdateRecipe(id string, r *Recipe) (int64, error) {
 	stmt, err := db.Prepare("UPDATE recipes SET title = ?, making_time = ?, serves = ?, ingredients = ?, cost = ? WHERE id = ?")
 	if err != nil {
@@ -96,6 +101,7 @@ func (db *MySQLRepository) UpdateRecipe(id string, r *Recipe) (int64, error) {
 	return affected, nil
 }
 
+// DeleteRecipe is the mysql implementation of delete recipe by id
 func (db *MySQLRepository) DeleteRecipe(id string) (int64, error) {
 	stmt, err := db.Prepare("DELETE FROM recipes WHERE id = ?")
 	if err != nil {

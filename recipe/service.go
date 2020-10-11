@@ -11,7 +11,8 @@ var ErrCreateRecipe = errors.New("Recipe creation failed!")
 var ErrUpdateRecipe = errors.New("Recipe update failed!")
 var ErrNotFound = errors.New("No recipe found")
 
-type RecipeRepository interface {
+// Repository defined the functions that datasource should perform
+type Repository interface {
 	InsertRecipe(r *Recipe) (int64, error)
 	GetRecipies() ([]Recipe, error)
 	GetRecipieByID(id string) (*Recipe, error)
@@ -19,14 +20,17 @@ type RecipeRepository interface {
 	DeleteRecipe(id string) (int64, error)
 }
 
+// Service contains the recipe repository
 type Service struct {
-	repo RecipeRepository
+	repo Repository
 }
 
-func NewService(repo RecipeRepository) *Service {
+// NewService return the recipe service
+func NewService(repo Repository) *Service {
 	return &Service{repo: repo}
 }
 
+// InsertRecipe performs the business logic for inserting recipe to datasource
 func (s *Service) InsertRecipe(r *Recipe) (*Recipe, error) {
 	if r.Title == "" || r.MakingTime == "" || r.Serves == "" || r.Ingredients == "" || r.Cost == 0 {
 		return nil, ErrCreateRecipe
@@ -49,14 +53,17 @@ func (s *Service) InsertRecipe(r *Recipe) (*Recipe, error) {
 	return lastRecipe, nil
 }
 
+// GetRecipies performs the business logic for getting recipes from datasource
 func (s *Service) GetRecipies() ([]Recipe, error) {
 	return s.repo.GetRecipies()
 }
 
+// GetRecipieByID performs the business logic for getting recipe from datasource
 func (s *Service) GetRecipieByID(id string) (*Recipe, error) {
 	return s.repo.GetRecipieByID(id)
 }
 
+// UpdateRecipe performs the business logic for updating recipe in datasource
 func (s *Service) UpdateRecipe(id string, r *Recipe) (int64, error) {
 	if r.Title == "" || r.MakingTime == "" || r.Serves == "" || r.Ingredients == "" || r.Cost == 0 {
 		return 0, ErrUpdateRecipe
@@ -74,6 +81,7 @@ func (s *Service) UpdateRecipe(id string, r *Recipe) (int64, error) {
 	return affected, nil
 }
 
+// DeleteRecipe performs the business logic for deleting recipe in datasource
 func (s *Service) DeleteRecipe(id string) (int64, error) {
 	affected, err := s.repo.DeleteRecipe(id)
 	if err != nil {
