@@ -12,10 +12,10 @@ var ErrUpdateRecipe = errors.New("Recipe update failed!")
 var ErrNotFound = errors.New("No recipe found")
 
 type RecipeRepository interface {
-	InsertRecipe(r Recipe) (int64, error)
+	InsertRecipe(r *Recipe) (int64, error)
 	GetRecipies() ([]Recipe, error)
 	GetRecipieByID(id string) (*Recipe, error)
-	UpdateRecipe(id string, r Recipe) (int64, error)
+	UpdateRecipe(id string, r *Recipe) (int64, error)
 	DeleteRecipe(id string) (int64, error)
 }
 
@@ -27,7 +27,7 @@ func NewService(repo RecipeRepository) *Service {
 	return &Service{repo: repo}
 }
 
-func (s *Service) InsertRecipe(r Recipe) (*Recipe, error) {
+func (s *Service) InsertRecipe(r *Recipe) (*Recipe, error) {
 	if r.Title == "" || r.MakingTime == "" || r.Serves == "" || r.Ingredients == "" || r.Cost == 0 {
 		return nil, ErrCreateRecipe
 	}
@@ -57,7 +57,7 @@ func (s *Service) GetRecipieByID(id string) (*Recipe, error) {
 	return s.repo.GetRecipieByID(id)
 }
 
-func (s *Service) UpdateRecipe(id string, r Recipe) (int64, error) {
+func (s *Service) UpdateRecipe(id string, r *Recipe) (int64, error) {
 	if r.Title == "" || r.MakingTime == "" || r.Serves == "" || r.Ingredients == "" || r.Cost == 0 {
 		return 0, ErrUpdateRecipe
 	}

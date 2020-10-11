@@ -21,7 +21,7 @@ func NewMySQLRepository(db *sql.DB) *MySQLRepository {
 	return mySQLRepository
 }
 
-func (db *MySQLRepository) InsertRecipe(r Recipe) (int64, error) {
+func (db *MySQLRepository) InsertRecipe(r *Recipe) (int64, error) {
 	stmt, err := db.Prepare("INSERT INTO recipes(title, making_time, serves, ingredients, cost, created_at, updated_at) VALUES(?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		return 0, err
@@ -78,7 +78,7 @@ func (db *MySQLRepository) GetRecipieByID(id string) (*Recipe, error) {
 	return &r, nil
 }
 
-func (db *MySQLRepository) UpdateRecipe(id string, r Recipe) (int64, error) {
+func (db *MySQLRepository) UpdateRecipe(id string, r *Recipe) (int64, error) {
 	stmt, err := db.Prepare("UPDATE recipes SET title = ?, making_time = ?, serves = ?, ingredients = ?, cost = ? WHERE id = ?")
 	if err != nil {
 		return 0, err

@@ -1,20 +1,38 @@
 package api
 
 import (
+	"bytes"
+	"io/ioutil"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"github.com/yu-yk/recipes-restful/recipe"
 )
+
+func requestLogMiddleware(c *gin.Context) {
+	// Read the Body content
+	var bodyBytes []byte
+	if c.Request.Body != nil {
+		bodyBytes, _ = ioutil.ReadAll(c.Request.Body)
+	}
+	// Restore the io.ReadCloser to its original state
+	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
+
+	body, _ := ioutil.ReadAll(bytes.NewBuffer(bodyBytes))
+	log.Println("---body/--- \r\n" + string(body))
+	c.Next()
+}
 
 func (s *Server) postRecipeHandler(c *gin.Context) {
 	repository := recipe.NewMySQLRepository(s.db)
 	recipeService := recipe.NewService(repository)
 
 	var r recipe.Recipe
-	c.Bind(&r)
+	c.ShouldBindBodyWith(&r, binding.JSON)
 
-	lastRecipe, err := recipeService.InsertRecipe(r)
+	lastRecipe, err := recipeService.InsertRecipe(&r)
 	if err == recipe.ErrCreateRecipe {
 		c.JSON(http.StatusOK, gin.H{
 			"message":  err.Error(),
@@ -68,9 +86,9 @@ func (s *Server) updateRecipeHandler(c *gin.Context) {
 
 	id := c.Param("id")
 	var r recipe.Recipe
-	c.Bind(&r)
+	c.ShouldBindBodyWith(&r, binding.JSON)
 
-	_, err := recipeService.UpdateRecipe(id, r)
+	_, err := recipeService.UpdateRecipe(id, &r)
 	if err == recipe.ErrUpdateRecipe {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message":  err.Error(),
