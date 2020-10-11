@@ -28,7 +28,7 @@ func NewService(repo RecipeRepository) *Service {
 }
 
 func (s *Service) InsertRecipe(r Recipe) (*Recipe, error) {
-	if r.Title == "" || r.MakingTime == "" || r.Serves == "" || r.Ingredients == "" || r.Cost == "" {
+	if r.Title == "" || r.MakingTime == "" || r.Serves == "" || r.Ingredients == "" || r.Cost == 0 {
 		return nil, ErrCreateRecipe
 	}
 
@@ -58,7 +58,7 @@ func (s *Service) GetRecipieByID(id string) (*Recipe, error) {
 }
 
 func (s *Service) UpdateRecipe(id string, r Recipe) (int64, error) {
-	if r.Title == "" || r.MakingTime == "" || r.Serves == "" || r.Ingredients == "" || r.Cost == "" {
+	if r.Title == "" || r.MakingTime == "" || r.Serves == "" || r.Ingredients == "" || r.Cost == 0 {
 		return 0, ErrUpdateRecipe
 	}
 

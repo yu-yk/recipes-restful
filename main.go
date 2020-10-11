@@ -15,7 +15,7 @@ func main() {
 	password := os.Getenv("CLEARDB_DATABASE_PASSWORD")
 	dbName := os.Getenv("CLEARDB_DATABASE_DB")
 
-	db, err := newSQLConn("mysql", user+":"+password+"@tcp("+host+":3306)/"+dbName+"?parseTime=true")
+	db, err := newSQLConn("mysql", user+":"+password+"@tcp("+host+":3306)/"+dbName+"?parseTime=true&reconnect=true")
 	if err != nil {
 		log.Fatal(err)
 	}
